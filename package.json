@@ -3,12 +3,13 @@
 	"version": "1.0.0",
 	"description": "",
 	"engines": {
-		"node": "14.16.0"
+		"node": "14.16.0",
+		"npm": "8.3.0"
 	},
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
-		"heroku-postbuild": "cd client && npm install && npm run build"
+		"heroku-postbuild": "cd netflix-client && npm install && npm run build"
 	},
 	"keywords": [],
 	"author": "",
