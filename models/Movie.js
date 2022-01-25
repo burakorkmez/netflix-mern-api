@@ -13,16 +13,10 @@ const MovieSchema = new mongoose.Schema(
 		img: {
 			type: String,
 		},
-		imgTitle: {
-			type: String,
-		},
 		imgSmall: {
 			type: String,
 		},
 		trailer: {
-			type: String,
-		},
-		video: {
 			type: String,
 		},
 		year: {
@@ -32,6 +26,9 @@ const MovieSchema = new mongoose.Schema(
 			type: Number,
 		},
 		genre: {
+			type: String,
+		},
+		duration: {
 			type: String,
 		},
 		isSeries: {

@@ -31,10 +31,10 @@ router.delete('/:id', verifyToken, async (req, res) => {
 	}
 });
 
-// GET
+// GET ALL
 router.get('/', verifyToken, async (req, res) => {
 	const typeQuery = req.query.type;
-	const genreQuery = req.query.type;
+	const genreQuery = req.query.genre;
 	let list = [];
 
 	try {
@@ -51,7 +51,7 @@ router.get('/', verifyToken, async (req, res) => {
 				]);
 			}
 		} else {
-			list = await List.aggregate([{ $sample: { size: 10 } }]);
+			list = await List.find();
 		}
 		res.status(200).json(list);
 	} catch (err) {
@@ -59,4 +59,13 @@ router.get('/', verifyToken, async (req, res) => {
 	}
 });
 
+// GET A SINGLE LIST
+router.get('/find/:id', verifyToken, async (req, res) => {
+	try {
+		const list = await List.findById(req.params.id);
+		res.status(200).json(list);
+	} catch (err) {
+		res.status(500).json(err);
+	}
+});
 module.exports = router;

@@ -6,7 +6,18 @@ const verifyToken = require('../verifyToken');
 // UPDATE
 router.put('/:id', verifyToken, async (req, res) => {
 	if (req.user.id === req.params.id || req.user.isAdmin) {
+		console.log(req.body, 'body');
 		if (req.body.password) {
+			const _user = await User.findById(req.user.id);
+			const bytes = CryptoJS.AES.decrypt(
+				_user.password,
+				process.env.SECRET_KEY
+			);
+			const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
+
+			if (originalPassword !== req.body.password) {
+				return res.status(401).json({ data: 'Wrong password!' });
+			}
 			req.body.password = CryptoJS.AES.encrypt(
 				req.body.password,
 				process.env.SECRET_KEY
@@ -60,7 +71,7 @@ router.get('/', verifyToken, async (req, res) => {
 	if (req.user.isAdmin) {
 		try {
 			const users = query
-				? await User.find().sort({ _id: -1 }).limit(10)
+				? await User.find().sort({ _id: -1 }).limit(5)
 				: await User.find();
 			res.status(200).json(users);
 		} catch (err) {

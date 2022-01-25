@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const app = express();
 
@@ -26,4 +28,12 @@ app.use('/api/users', userRoute);
 app.use('/api/movies', movieRoute);
 app.use('/api/lists', listRoute);
 
-app.listen(8080, () => console.log('Server is up and running..'));
+app.use(express.static(path.join(__dirname, '/netflix-client/build')));
+
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, '/netflix-client/build', 'index.html'));
+});
+
+app.listen(process.env.PORT || 8080, () =>
+	console.log('Server is up and running..')
+);
