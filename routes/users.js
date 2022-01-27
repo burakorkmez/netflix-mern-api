@@ -6,7 +6,6 @@ const verifyToken = require('../verifyToken');
 // UPDATE
 router.put('/:id', verifyToken, async (req, res) => {
 	if (req.user.id === req.params.id || req.user.isAdmin) {
-		console.log(req.body, 'body');
 		if (req.body.password) {
 			const _user = await User.findById(req.user.id);
 			const bytes = CryptoJS.AES.decrypt(

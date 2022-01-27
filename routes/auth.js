@@ -2,6 +2,12 @@ const router = require('express').Router();
 const User = require('../models/User');
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const admin = require('firebase-admin');
+const serviceAccount = require('../ServiceAccountKey.json');
+
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+});
 
 // REGISTER / SIGN UP
 router.post('/register', async (req, res) => {
@@ -37,6 +43,11 @@ router.post('/login', async (req, res) => {
 			return res.status(401).json('Wrong password or username!');
 		}
 
+		// create customToken to be able to use firebase storage
+		const customToken = await admin
+			.auth()
+			.createCustomToken(user._id.toString());
+
 		// create accessToken
 		const accessToken = jwt.sign(
 			{ id: user._id, isAdmin: user.isAdmin },
@@ -48,7 +59,7 @@ router.post('/login', async (req, res) => {
 
 		const { password, ...info } = user._doc;
 
-		res.status(200).json({ ...info, accessToken });
+		res.status(200).json({ ...info, accessToken, customToken });
 	} catch (err) {
 		res.status(500).json(err);
 	}
